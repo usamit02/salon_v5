@@ -1,0 +1,41 @@
+<div>
+  <div>
+    <input #filter (keyup)="tree.treeModel.filterNodes(filter.value)" placeholder="部屋を検索" />
+    <button mat-icon-button (click)="tree.treeModel.clearFilter()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div *ngIf="change" color="primary" style="background-color:purple;">
+    <button mat-icon-button (click)="save(tree.treeModel)">
+      <mat-icon style="color:white;">save</mat-icon>
+    </button>
+    <button mat-icon-button (click)="undo()">
+      <mat-icon style="color:white;">undo</mat-icon>
+    </button>
+  </div>
+</div>
+<tree-root #tree [focused]="true" [nodes]="nodes" [options]="options">
+  <ng-template #treeNodeTemplate let-node="node">
+    <span *ngIf="node === editNode">
+      <input [ngModel]="node.data.na" autofocus (blur)="stopEdit()" (keyup.enter)="node.data.na=$event.target.value;saveEdit()"
+        (keyup.esc)="stopEdit()" />
+    </span>
+    <span *ngIf="node !== editNode" [class.paid]="node.data.price" [class.shut]="node.data.shut===100">{{ node.data.na
+      }} <mat-icon *ngIf="node.data.plan>0">lock</mat-icon></span>
+  </ng-template>
+</tree-root>
+
+<div class="menu" *ngIf="contextMenu" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
+  <h4>{{ contextMenu.node.data.na }}</h4>
+  <hr>
+  <ul>
+    <li (click)="copy()"><a>コピー</a></li>
+    <ng-container *ngIf="contextMenu.node.data.auth >=1000">
+      <li (click)="cut()"><a>切り取り</a></li>
+      <li (click)="paste()"><a [style.opacity]="canPaste() && 1 || 0.3">貼り付け</a></li>
+      <li class="master" (click)="add(tree)"><a>新規</a></li>
+      <li class="master" (click)="edit()"><a>変更</a></li>
+      <li class="master" (click)="del(tree)"><a>削除</a></li>
+    </ng-container>
+  </ul>
+</div>

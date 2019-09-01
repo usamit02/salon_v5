@@ -1,0 +1,105 @@
+<ng-container *ngIf="payid===0">
+  <ion-item *ngIf="room.lock===1" color="warning" text-center align-items-center>
+    <span>入会審査中です。もうしばらくお待ちください。</span>
+  </ion-item>
+  <div class="row" *ngFor="let story of storys;index as i;">
+    <div class="txt" [innerHtml]="story.txt | safe: 'html'"></div>
+    <div class="media" [innerHtml]="story.media | safe: 'html'"></div>
+    <div *ngIf="story.pay>0" text-center align-items-center>
+      <ion-button (click)="goPayMode(i)" color="success">{{story.pay}}円で続きを見る</ion-button>
+    </div>
+  </div>
+  <ng-container *ngIf="room.lock>9">
+    <div *ngIf="room.shut!==1" style="width:100%;" text-center align-items-center>
+      <ion-button color="success" (click)="goPayMode(-1)">
+        このサロンに加入する
+      </ion-button>
+    </div>
+    <ion-item *ngIf="room.shut===1" color="warning" text-center align-items-center>
+      <span>現在募集を停止しています。</span>
+    </ion-item>
+  </ng-container>
+  <div *ngIf="room.plan && !room.lock" style="width:100%;" text-center align-items-center>
+    <ion-button round color="danger" (click)="leave()">
+      このサロンを退会する
+    </ion-button>
+  </div>
+</ng-container>
+<ng-container *ngIf="payid">
+  <ng-container *ngIf="payid>=0">
+    <h2>{{storys[payid].pay}}円を一括払いします。</h2>
+  </ng-container>
+  <ng-container *ngIf="payid===-1">
+    <ion-title>注意事項</ion-title>
+    以下に該当した場合、強制退会となります。
+    <ol>
+      <li>クレジットカードの有効期限切れ、残高不足等により引き落とし不能となった。</li>
+      <li>公序良俗に反する書き込み、他者を誹謗中傷する書き込みをした。</li>
+      <li>サロン内の情報をオーナーの許可なく漏洩した。</li>
+      <li>サロンオーナーが別途定める規約に違反した。</li>
+    </ol>
+    <ion-title>返金について</ion-title>
+    <span>退会はいつでも可能ですが、直近の引き落とし日から1月に満たない場合でも未利用日数分は返金されません。強制退会となった場合も同様とします。</span>
+    <ion-title>プライバシーポリシー</ion-title>
+    クレジットカード番号などは<a href="https://pay.co.jp/" target="_blank">PAY株式会社</a>が提供する<a href="https://pay.jp" target="_blank">PAY.JP</a>によりトークン化したうえで通信されます。本システムにカード情報が記録されることはありません。
+    <ion-title>月額：{{plan.amount}}円
+      <span *ngIf="plan.billing_day">（毎月{{plan.billing_day}}日自動引き落とし）</span></ion-title>
+    <ng-container *ngIf="!plan.billing_day">
+      <span *ngIf="plan.auth_days && !plan.trial_days">（本日より{{plan.auth_days}}日以内で審査を通過した日に毎月自動引き落とし）</span>
+      <span *ngIf="plan.auth_days && plan.trial_days">（本日より{{plan.auth_days}}日以内で審査を通過した日から無料期間{{plan.trial_days}}日間を経過した日に毎月自動引き落とし）</span>
+    </ng-container>
+    <p *ngIf="plan.prorate && plan.billing_day">※初月分は加入日から引き落とし日までの日数により日割り計算で加入日に自動引き落としされます。</p>
+    <p *ngIf="!plan.prorate && plan.billing_day && (plan.auth_days || plan.trial_days)">※初月分は加入日から次回引き落とし日までの日数が一月に満たない場合でも月額分が加入日に自動引き落としされます。</p>
+    <h3 *ngIf="plan.trial_days">無料お試し期間:{{plan.trial_days}}日間</h3>
+  </ng-container>
+  <div *ngIf="card.last4">
+    <p>登録済クレジットカード</p>
+    　 <p>カード番号　　{{card.brand}} ****-****-****-{{card.last4}}</p>
+    <p>有効期間　　　{{card.exp_year}}年{{card.exp_month}}月</p>
+    <ion-item text-center align-items-center>
+      <ion-button color="success" (click)="pay('')">同意して申し込む</ion-button>
+      <ion-button *ngIf="!card.change" color="light" (click)="card.change=true">クレジットカードを変更する</ion-button>
+    </ion-item>
+  </div>
+  <form #form="ngForm" (ngSubmit)="newpay(form.value)" *ngIf="!card.last4||card.change">
+    <ion-list>
+      <ion-list-header>
+        <ion-img [src]="visamaster">
+        </ion-img>※現在、VISAカード及びMASTERカードのみ対応です。
+      </ion-list-header>
+      <ion-item>
+        <ion-label>カード番号</ion-label>
+        <ion-input [(ngModel)]="newcard.number" name="number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>CVC</ion-label>
+        <ion-input [(ngModel)]="newcard.cvc" name="cvc"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>有効期間</ion-label>
+        <ion-select [(ngModel)]="newcard.exp_month" name="exp_month">
+          <ion-select-option *ngFor="let month of months">{{month}}</ion-select-option>
+        </ion-select>
+        <ion-select [(ngModel)]="newcard.exp_year" name="exp_year">
+          <ion-select-option *ngFor="let year of years">{{year}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div text-center align-items-center>
+        <ion-button color="success" type="submit">同意して申し込む</ion-button>
+      </div>
+    </ion-list>
+  </form>
+  <p *ngIf="plan.auth_days && payid===-1">※審査により加入できない場合があります。{{plan.auth_days}}日以内に加入決定します。</p>
+  <div text-center align-items-center>
+    <ion-button color="light" (click)="payid=0">元の画面に戻る</ion-button>
+  </div>
+</ng-container>
+
+<!--
+    <h2>返金について</h2>
+    <span *ngIf="plan.prorate">退会はいつでも可能で、直近の引き落とし日から1月に満たない場合未利用日数分は日割り計算して返金されます。</span>
+    <span *ngIf="!plan.prorate">退会はいつでも可能ですが、直近の引き落とし日から1月に満たない場合でも未利用日数分は返金されません。強制退会処分を受けた場合も同様とします。</span>
+
+
+  
+-->

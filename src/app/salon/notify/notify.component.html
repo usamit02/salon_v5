@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-title>通知設定</ion-title>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>メールアドレス</ion-label>
+      <ion-input slot="end" [(ngModel)]="notify.mail" name="mail" inputmode="email" placeholder="clife@gmail.com"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>ダイレクト通知</ion-label>
+      <ion-toggle [(ngModel)]="notify.direct" name="direct"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label>メンション通知</ion-label>
+      <ion-toggle [(ngModel)]="notify.mention" name="mention"></ion-toggle>
+    </ion-item>
+    <ion-item *ngIf="blocks.length">
+      <ion-label>ブロック解除</ion-label>
+      <ion-select interface="popover" [(ngModel)]="unblocks" (ionChange)="unblock()" name="unblock" multiple="true"
+        cancelText="キャンセル" okText="選択">
+        <ion-select-option *ngFor="let block of blocks" [value]="block.id">{{block.na}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div text-center align-items-center>
+      <ion-button (click)="submit()">適用</ion-button>
+      <ion-button color="light" (click)="cancel()">キャンセル</ion-button>
+    </div>
+  </ion-list>
+</ion-content>

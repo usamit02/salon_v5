@@ -1,0 +1,43 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawerL id="sidel" class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+    <app-rooms [user]="user" (getrooms)="onGetRooms($event)" (selected)="onSelected($event)"></app-rooms>
+  </mat-sidenav>
+  <mat-sidenav #drawerR position="end" id="sider" class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+    <app-members [user]="user" [room]="room" (hasmember)="onHasmember($event)"></app-members>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" [ngStyle]="barColor">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawerL.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>{{room.na}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span *ngIf="(room.id===0 || room.id===900) && user.id">{{user.p | number}}ポイント</span>
+      <span class="fill-space"></span>
+      <button *ngIf="save=='saveroom'||save=='savestory'" mat-icon-button (click)="exec=save">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button *ngIf="save" mat-icon-button (click)="undo()">
+        <mat-icon>undo</mat-icon>
+      </button>
+      <button mat-icon-button (click)="exit()">
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawerR.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+    </mat-toolbar>
+    <app-main [user]="user" [room]="room" [rooms]="rooms" [exec]="exec" [hasmember]="hasmember" (save)="saveCTL($event)"></app-main>
+    <p></p>
+    <app-storys *ngIf="room.story && room.auth>=500" [rid]="room.id" [exec]="exec" (save)="saveCTL($event)"></app-storys>
+    <span *ngIf="room.auth<500 || !room.story&&room.auth===500" style="color:gray;">※この部屋の編集権限がありません</span>
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
+
+<!--
+  <mat-toolbar color="primary" [class.paid]="room.price" [class.shut]="room.shut===100" [class.logout]="!user.id"
+      [class.save]="save">
+  <app-tiny></app-tiny>
+
+-->

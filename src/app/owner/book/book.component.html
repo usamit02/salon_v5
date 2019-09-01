@@ -1,0 +1,38 @@
+<table class="mattable" mat-table [dataSource]="data">
+  <ng-container matColumnDef="rqd">
+    <th mat-header-cell *matHeaderCellDef> 請求日</th>
+    <td mat-cell *matCellDef="let d"> {{d.rqd | date : 'M月d日'}} </td>
+  </ng-container>
+  <ng-container matColumnDef="upd">
+    <th mat-header-cell *matHeaderCellDef> 確定日</th>
+    <td mat-cell *matCellDef="let d"> {{d.upd | date : 'M月d日'}} </td>
+  </ng-container>
+  <ng-container matColumnDef="room">
+    <th mat-header-cell *matHeaderCellDef> 部屋 </th>
+    <td mat-cell *matCellDef="let d"> {{d.room}} </td>
+  </ng-container>
+  <ng-container matColumnDef="amount">
+    <th style='text-align: right' mat-header-cell *matHeaderCellDef> 金額</th>
+    <td style='text-align: right' mat-cell *matCellDef="let d">{{d.amount | number}}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [class.hide]="pager" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+<div id="request">
+  <label>振込<input id="amount" type="number" min="1000" [max]="user.p" step="100" (change)="culcFee($event)" />ポイント</label>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>システム手数料　{{fee | number}}円</span>
+  <button (click)="request()">請求</button>
+</div>
+<div *ngIf="!inputBank">
+  <label>　お振込先:{{bank.na}}　{{bank.branch}}　{{bank.acctyp}}　{{bank.accnum}}</label>
+  <button (click)="newBank()">振込口座変更</button>
+</div>
+<form *ngIf="inputBank" #bankForm="ngForm" (ngSubmit)=setBank()>
+  <label>銀行名<input name="bankna" type="text" [(ngModel)]="bank.na" #bankna="ngModel" required maxlength="20" /></label>
+  <label>支店名<input name="branch" type="text" [(ngModel)]="bank.branch" #branch="ngModel" required maxlength="20" /></label>
+  <br />
+  <label>口座種別<input name="acctyp" type="text" size="2" [(ngModel)]="bank.acctyp" #acctyp="ngModel" required maxlength="10" /></label>
+  <label>口座番号<input name="accnum" type="number" [(ngModel)]="bank.accnum" #accnum="ngModel" required /></label>
+  <input type="submit" value="振込口座登録" [disabled]="bankForm.invalid || bankForm.submitted || bankForm.pristine" />
+</form>

@@ -1,0 +1,66 @@
+.readed{
+  border-bottom:2px dotted red;
+}
+.msg{  
+  position:fixed;
+  left:150px;
+  z-index: 1;
+  opacity: 0.5;
+}
+#mentionTop{
+  top:0px;
+}
+#topmsg{
+  color:gray;
+  width:100%;
+  text-align: center;
+  padding-top:1em;
+}
+#btmmsg{
+  bottom:0px;
+}
+.mention{
+  color:white;
+  background-color: red;  
+}
+.newmsg{
+  color:white;
+  background-color: blue;  
+}
+.tiny{
+  width:100%;
+  min-height: 3em;
+  border:2px dotted #0B85A1;
+  border-radius: 3px;
+}
+.avatar{
+  min-width: 40px;
+}
+.avatarItem{
+  --padding-start:0px;
+  --inner-padding-end:5px;
+}
+.none{
+  display:none;
+}
+.chatdate{
+  color:gray;
+}
+.emoji{
+  width:1em;
+}
+.gray{
+  color:gray;
+}
+.facebook{
+  color:#305097 ;
+}
+.twitter{
+  color: #00aced;
+}
+.google{
+  color:#db4a39
+}
+.yahoo{
+  color:#FF0027
+}

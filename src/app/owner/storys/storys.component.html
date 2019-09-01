@@ -1,0 +1,23 @@
+<div id="wrap">
+  <ng-container *ngFor="let story of storys;index as i">
+    <div [id]="i" class="row" [class.pay]="story.pay > 0" draggable="true" (dragstart)="dragstart($event)" (dragenter)="dragentertxt($event)"
+      (dragover)="dragover($event)" (drop)="droptxt($event)" (dragend)="dragend()">
+      <div>
+        <div class="media" [id]="'media' + story.id" [innerHtml]="story.media  | safe: 'html'" (dragenter)="dragenter($event)"
+          (dragover)="dragover($event)" (drop)="dropmedia($event)" draggable="false" (contextmenu)="context($event)">
+        </div>
+        <progress *ngIf="story.upload" [value]="progress.load" [max]="progress.total"></progress>
+      </div>
+      <div class="tiny" [innerHtml]="story.txt | safe: 'html'"></div>
+    </div>
+  </ng-container>
+</div>
+<button mat-icon-button (click)="newrow()">
+  <mat-icon>add_note</mat-icon>
+</button>
+<canvas style='display:none;'></canvas>
+<div class="menu" *ngIf="contextMenu" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
+  <div><input class="url" type="text" placeholder="twitterやyoutubeのurl" (change)="urlup($event)"><button (click)="urlup($event)">適用</button></div>
+  <div><input type="file" value="ファイルを選択" (change)="fileup($event)"></div>
+  <div><button (click)="mediaDel($event)">削　除</button></div>
+</div>

@@ -1,0 +1,20 @@
+.mattable{
+  width:100%; 
+}
+.mat-header-row{
+  height: 30px;
+}
+.mat-row td{
+  font-size:1em; 
+}
+.mat-row{
+ height: 2em;
+}
+.hide{
+  display:none;
+}
+#request{
+  margin-top: 20px;
+  display:flex;
+}
+input.ng-dirty.ng-invalid{background-color: red;}

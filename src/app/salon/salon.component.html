@@ -1,0 +1,99 @@
+<ion-app>
+  <ion-split-pane contentId="menu-content">
+    <ion-menu contentId="menu-content" side="start">
+      <ion-header>
+        <ion-toolbar>
+          <ion-item lines="none" button="true" (click)="retRoom()" (press)="retRoom(true)">
+            <ion-title>{{data.folder.na}}</ion-title>
+            <ion-icon *ngIf="data.folder.id!==1" name="exit"></ion-icon>
+            <ion-icon *ngIf="data.folder.id===1 && bookmk" name="bookmark" color="danger"></ion-icon>
+          </ion-item>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item *ngFor="let room of data.rooms" button="true" (click)="joinRoom(room)">
+            <span>{{room.na}}</span><span class="mention">{{room.count}}</span>
+            <ion-icon *ngIf="room.folder===1" name="arrow-dropdown"></ion-icon>
+            <ion-icon *ngIf="room.new" color="secondary" name="mail-unread" slot="end"></ion-icon>
+            <ion-icon *ngIf="room.lock>0" color="success" name="lock" slot="end"></ion-icon>
+            <ion-icon *ngIf="room.bookmark" color="danger" name="bookmark" slot="end"></ion-icon>
+          </ion-item>
+          <ion-button *ngIf="data.folder.id===-2 && data.mentionRooms.length" slot="end" color="warning" (click)="mentionClear()">全て既読にする</ion-button>
+        </ion-list>
+        <ion-list>
+          <ion-item *ngIf="data.mentionRooms.length && data.folder.id!==-2" button="true" (click)="mention()"><span>メンション</span><span
+              class="mention">{{data.mentionRooms.length}}</span></ion-item>
+        </ion-list>
+        <ion-list *ngIf="data.folder.id===1 && !bookmk && data.user.id">
+          <ion-item button="true" (click)="direct()"><span>ダイレクト</span></ion-item>
+          <ion-item button="true" (click)="config()"><span>設定</span></ion-item>
+          <p style="width:100%;text-align:center;">powered by <a href="https://clife.cf/diary.php?p=500" target="_blank">C-Life</a></p>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-menu contentId="menu-content" side="end">
+      <ion-header>
+        <ion-toolbar>
+          <ion-item lines="none">
+            <ion-searchbar placeholder="ユーザー検索" (ionClear)="searchMemberClear()" [(ngModel)]="member" (keyup.enter)="searchMember()"></ion-searchbar>
+            <ion-button (click)="searchMember()">
+              <ion-icon name="search"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-text *ngIf="!onMembers.length && !offMembers.length && !searchMembers.length">誰もいない...</ion-text>
+        <ng-container *ngIf="onMembers.length">
+          <ion-icon name="contact" color="secondary"></ion-icon>
+          <ion-text>
+            オンライン　{{onMembers.length}}人
+          </ion-text>
+        </ng-container>
+        <ion-list>
+          <ion-item *ngFor="let member of onMembers" button="true" (click)="popMember(member,$event)">
+            <ion-avatar><img [src]="member.avatar"></ion-avatar>
+            {{member.na}}
+            <ion-icon *ngIf="member.auth>1" [class]="auth[member.auth].class" name="school"></ion-icon>
+            <ion-icon *ngIf="member.auth===1" name="contacts" color="success"></ion-icon>
+            <ion-icon [name]="member.rtc" slot="end" [class]="member.rtc"></ion-icon>
+          </ion-item>
+          <ion-item *ngFor="let guest of onGuests">
+            <ion-avatar><img [src]="guest.avatar"></ion-avatar>
+            {{guest.na}}
+            <ion-icon [name]="guest.rtc" slot="end" [class]="guest.rtc"></ion-icon>
+          </ion-item>
+        </ion-list>
+        <ng-container *ngIf="offMembers.length">
+          <ion-icon name="contact" color="light"></ion-icon>
+          <ion-text>
+            オフライン　{{offMembers.length}}人
+          </ion-text>
+        </ng-container>
+        <ion-list>
+          <ion-item *ngFor="let member of offMembers" button="true" (click)="popMember(member,$event)">
+            <ion-avatar>
+              <img [src]="member.avatar">
+            </ion-avatar>
+            {{member.na}}
+            <ion-icon *ngIf="member.auth>1" [class]="auth[member.auth].class" name="school"></ion-icon>
+            <ion-icon *ngIf="member.auth===1" name="contacts" color="success"></ion-icon>
+          </ion-item>
+        </ion-list>
+        <ion-text *ngIf="searchMembers.length">
+          検索結果　{{searchMembers.length}}人
+        </ion-text>
+        <ion-list>
+          <ion-item *ngFor="let member of searchMembers" button="true" (click)="popMember(member,$event)">
+            <ion-avatar>
+              <img [src]="member.avatar">
+            </ion-avatar>
+            <ion-label [class.black]="member.black">{{member.na}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="menu-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

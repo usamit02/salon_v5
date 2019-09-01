@@ -1,0 +1,77 @@
+<app-story *ngIf="room.story" [room]="room"></app-story>
+<app-card *ngIf="room.folder" [rooms]="data.rooms"></app-card>
+<div id="mentionTop" class="msg"><span *ngIf="mentionTop" (click)="noticeClick('mentionTop')" class="mention">メンション↑{{mentionTop}}件</span></div>
+<ion-content *ngIf="data.room.chat" id="chatscontent" #chatscontent (ionScrollEnd)="onScrollEnd()">
+  <ion-infinite-scroll #top position="top" threshold="10px" (ionInfinite)="chatLoad($event,'top')">
+    <ion-infinite-scroll-content loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <p id="topmsg" *ngIf="topMsg">{{topMsg}}</p>
+  <ion-list>
+    <ion-item class="chat" #chatItems *ngFor="let chat of chats;index as i" (click)="chatClick($event,chat.uid,chat.na,i)"
+      [class.readed]="chat.readed">
+      <ion-item class="avatarItem" lines="none" button="true" (click)="popMember($event,chat.uid)">
+        <ion-avatar class="avatar">
+          <ion-img [src]="chat.avatar"></ion-img>
+        </ion-avatar>
+      </ion-item>
+      <div [id]="'chat' + i">
+        <span class="chatna">{{chat.na}}</span>
+        <span class="chatdate"> {{chat.upd.toDate()|chatdate}}</span>
+        <span class="chatdate" *ngIf="chat.rev"> {{chat.rev.toDate()|chatdate}}修正</span>
+        <div class="chattxt" [innerHtml]="chat.txt|safe:'html'"></div>
+        <div *ngIf="chat.edit" text-center align-items-center>
+          <ion-button (click)="editSend($event,i)">
+            <ion-icon name="send"></ion-icon>
+          </ion-button>
+        </div>
+        <div *ngIf="chat.emoji">
+          <div class="emoji"></div>
+        </div>
+        <div *ngIf="chat.react" [innerHTML]="chat.react|media:'react'|safe:'html'"></div>
+        <a *ngIf="chat.img" [href]="chat.img|media:'imgorg'" target="_blank">
+          <ion-img [src]="chat.img|media:'img'"></ion-img>
+        </a>
+        <a *ngIf="chat.youtube" [href]="chat.youtube|media:'youtube'" target="_blank">
+          <ion-img [src]="chat.youtube|media:'youtubeimg'"></ion-img>
+        </a>
+        <div *ngIf="chat.twitter" [innerHTML]="chat.twitter|media:'twitter'|safe:'html'">
+        </div>
+        <div *ngIf="chat.html" [innerHTML]="chat.html|safe:'html'">
+        </div>
+        <div *ngIf="chat.card" [innerHTML]="chat.card|media:'card'|safe:'html'">
+        </div>
+      </div>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll #btm position="bottom" threshold="10px" (ionInfinite)="chatLoad($event,'btm')">
+    <ion-infinite-scroll-content loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+<div id="btmmsg" class="msg">
+  <span class="mention" *ngIf="mentionBtm" (click)="noticeClick('mention')">メンション↓{{mentionBtm}}件</span>
+  <span class="newmsg" *ngIf="newUpds.length" (click)="noticeClick('newMsg')">新着投稿↓{{newUpds.length}}件</span>
+  <span class="newmsg" *ngIf="!newUpds.length && latest" (click)="noticeClick('latest')">最新を表示↓</span>
+</div>
+
+<!--
+
+
+      <span style="display:none;">{{i}}</span>
+      
+        <span *ngIf="chat.uid === data.user.id || data.room.auth >=200" slot="end">
+          <ion-button slot="icon-only" (click)="edit($event)" color="light">
+            <ion-icon name="brush"></ion-icon>
+          </ion-button>
+          <ion-button slot="icon-only" (click)="delete($event)" color="light">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </span>
+
+
+
+
+
+
+-->

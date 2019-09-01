@@ -1,0 +1,33 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size-xs="12" size-sm="6" size-md="4" size-lg="6" size-xl="4" *ngFor="let room of rooms">
+      <ion-card>
+        <ion-card-header (click)="joinRoom(room)">
+          <ion-card-title>{{room.na}}</ion-card-title>
+          <ion-card-subtitle *ngIf="room.amount">月額{{room.amount}}円</ion-card-subtitle>
+        </ion-card-header>
+        <div [innerHTML]="room.img" (click)="joinRoom(room)"></div>
+        <ion-card-content>
+          <ion-text (click)="joinRoom(room)">{{room.discription}}</ion-text>
+          <div style="display:flex">
+            <div *ngIf="online[room.id]">
+              <ion-icon name="contact" color="secondary"></ion-icon>{{online[room.id]}}
+            </div>
+            <div *ngIf="room.member">
+              <ion-icon name="contacts" color="success"></ion-icon>{{room.member}}
+            </div>
+            <div *ngIf="room.staff">
+              <ion-icon name="school" color="tertiary"></ion-icon>{{room.staff}}
+            </div>
+          </div>
+          <ion-item *ngIf="room.owner" lines="none" button="true" (click)="ownerClick(room.no)">
+            <ion-avatar>
+              <ion-img [src]="room.avatar"></ion-img>
+            </ion-avatar>
+            <ion-label>{{room.owner}}</ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

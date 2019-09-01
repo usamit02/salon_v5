@@ -1,0 +1,28 @@
+.sidenav-container {
+  height: 100%;
+}
+#sidel {
+  width: 300px;
+}
+#sider {
+  width: 250px;
+}
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  height: 30px;
+  top: 0;
+  z-index: 1;
+}
+
+.fill-space{
+  flex:1 1 auto;
+}
+.spacer {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}

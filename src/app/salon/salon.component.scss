@@ -1,0 +1,41 @@
+.mention{
+  background-color: red;
+  color:white;
+}
+.split-pane-visible >.split-pane-side {
+  flex-grow: 10;
+}
+.split-pane-visible >.split-pane-main {
+  flex-grow: 90;
+}
+.split-pane-visible >.split-pane-side {
+  min-width: 300px; /* Default: 270px */
+  max-width: 304px; /* Same as when menu opens in mobile mode */
+}
+.black{
+  color:gray;
+}
+.owner{
+  color:purple;
+}
+.master{
+  color:blue;
+}
+.creator{
+  color:orange;
+}
+.manager{
+  color:yellow
+}
+.assist{
+  color:black;
+}
+.headset{
+  color:#3880ff;
+}
+.mic{
+  color:#ffce00;  
+}
+.videocam{
+  color:#f04141;
+}

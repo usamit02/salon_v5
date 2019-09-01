@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-item button="true" (click)="close()">
+      <ion-title>{{user.na}}</ion-title>
+      <ion-icon name="exit"></ion-icon>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-img [src]="user.avatar"></ion-img>
+  <p>{{user.upd|chatdate:'detail'}}から参加、最終ログイン:{{user.rev|chatdate:'detail'}}</p>
+  <ion-item-group>
+    <p>参照リンク</p>
+    <ion-item *ngFor="let link of user.links" button="true" (click)="href(link.url)" (press)="edit(link)">
+      <ion-label slot="start">{{link.media}}</ion-label>
+      <ion-label slot="end">{{link.na}}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="data.user.id===user.id">
+      <ion-button (click)="edit()">新しい参照リンク</ion-button>
+    </ion-item>
+  </ion-item-group>
+  <ion-label color="light" *ngIf="!user.staffs.length">スタッフに就任していません</ion-label>
+  <ion-item-group *ngIf="user.staffs.length">
+    <p>スタッフ</p>
+    <ion-item *ngFor="let staff of user.staffs">
+      <ion-item button="true" (click)="joinRoom(staff.rid)">{{staff.room}}</ion-item>
+      <ion-label slot="end"> {{staff.class}}に{{staff.upd|chatdate:'detail'}}から就任</ion-label>
+    </ion-item>
+  </ion-item-group>
+  <ion-label color="ligth" *ngIf="!user.members.length">メンバーとして参加していません</ion-label>
+  <ion-item-group *ngIf="user.members.length">
+    <p>メンバー</p>
+    <ng-container *ngFor="let member of user.members">
+      <ion-item *ngIf="member.auth || data.room.auth>=200 || user.id===data.user.id" (press)="joinRoom(member.rid)">
+        <ion-item button="true" (click)="joinRoom(member.rid)">{{member.room}}</ion-item>
+        <ion-button *ngIf="!member.auth && data.room.auth>=200" color="success" (click)="judge(member)" slot="end">審査</ion-button>
+        <ion-label slot="end">{{member.class}} {{member.upd|chatdate:'detail'}}から参加</ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-item-group>
+</ion-content>

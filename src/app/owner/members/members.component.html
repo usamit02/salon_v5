@@ -1,0 +1,47 @@
+<div>
+  <div>
+    <span>&nbsp;&nbsp;</span>
+    <input #filter (keyup)="tree.treeModel.filterNodes(filter.value)" placeholder="会員から検索" />
+    <button mat-icon-button (click)="tree.treeModel.clearFilter()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <div *ngIf="change" style="background-color: purple">
+    <button mat-icon-button (click)="save(tree.treeModel)">
+      <mat-icon style="color:white;">save</mat-icon>
+    </button>
+    <button mat-icon-button (click)="undo()">
+      <mat-icon style="color:white;">undo</mat-icon>
+    </button>
+  </div>
+</div>
+<tree-root #tree [focused]="true" [nodes]="nodes" [options]="options">
+  <ng-template #treeNodeTemplate let-node="node">
+    <span *ngIf="node.data.id === 9999">
+      <input id="search" autofocus (blur)="clearSearch()" (keyup.enter)="search($event.target.value)" (keyup.esc)="clearSearch()"
+        placeholder="検索" />
+    </span>
+    <span *ngIf="node.data.id < 9999" [class.my]="node.data.my" [class.noedit]="node.data.id > room.auth"
+      [class.member]="node.data.id >=0 && node.data.id <=10">{{node.data.na}} {{node.data.num}} </span>
+    <span *ngIf="!(node.data.id >= 0)" [class.my]="node.data.id===user.id" [class.noedit]="node.data.room !== room.id || node.data.auth > room.auth">
+      <img class="avatar" [src]="node.data.avatar">{{node.data.na }}</span>
+    <span *ngIf="node.data.id > 9999">{{ node.data.na }}</span>
+  </ng-template>
+</tree-root>
+<div class="menu" *ngIf="contextMenu" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
+  <h4>{{ contextMenu.node.data.na }}</h4>
+  <hr>
+  <ul>
+    <li *ngIf="!(contextMenu.node.data.id >= 0) && contextMenu.node.parent.data.id>=100" (click)="cut()"><a>切り取り</a></li>
+    <li *ngIf="contextMenu.node.data.id > 10" (click)="paste()"><a [style.opacity]="canPaste() && 1 || 0.3">貼り付け</a></li>
+    <li *ngIf="!(contextMenu.node.data.id >= 0) && contextMenu.node.parent.data.id > 10" (click)="del(tree)"><a>削除</a></li>
+    <li *ngIf="!(contextMenu.node.data.id >= 0) && contextMenu.node.parent.data.id ===1" (click)="ban(tree)"><a>強制退会</a></li>
+    <li *ngIf="contextMenu.node.parent.data.id ===0" (click)="OK()"><a>OK</a></li>
+    <li *ngIf="contextMenu.node.parent.data.id ===0" (click)="NG(tree)"><a>NG</a></li>
+    <li *ngIf="!(contextMenu.node.data.id >= 0) && contextMenu.node.parent.data.id > 10 && room.auth >= 9000">
+      <input type="number" [value]="contextMenu.node.data.rate">％
+      <div><label></label><button (click)=rate()>～{{remainRate + contextMenu.node.data.rate}}％</button></div>
+    </li>
+    <li *ngIf="contextMenu.node.data.id===1" (click)=banall(tree)>解散</li>
+  </ul>
+</div>
