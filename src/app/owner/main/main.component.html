@@ -2,22 +2,30 @@
 <app-book *ngIf="room.id===900" [user]="user"></app-book>
 <!--  <app-story *ngIf="room.id>=950 && room.id< 1000" [user]="user" [room]="room"></app-story>-->
 <form *ngIf="room.auth>=1000" [formGroup]="roomForm">
-  <label>紹介文　<textarea name="discription" cols="70" rows="5" placeholder="部屋の目的や活動内容など" [formControl]="discription"></textarea></label>
+  <label>紹介文　<textarea name="discription" cols="70" rows="5" placeholder="部屋の目的や活動内容など"
+      [formControl]="discription"></textarea></label>
   <div style="display:flex;">
     <label>機能　</label>
     <label><input type="checkbox" name="chat" [formControl]="chat" [value]="1" />チャット　</label>
     <label *ngIf="hasmember">　※メンバーがいるのでサロンを中止できません。</label>
     <ng-container *ngIf="!hasmember">
-      <label><input type="checkbox" name="story" (change)="changeStory()" [formControl]="story" [value]="1" />ストーリー　</label>
+      <label><input type="checkbox" name="story" (change)="changeStory()" [formControl]="story"
+          [value]="1" />ストーリー　</label>
       <label *ngIf="story.value"><input type="checkbox" name="plan" [formControl]="plan" [value]="1">サロン　</label>
     </ng-container>
   </div>
   <div style="display:flex;">
     <label>制限　</label>
     <label><input type="radio" name="shut" [formControl]="shut" [value]="0" [checked]="shut.value===0" />公開</label>
-    <label *ngIf="!hasmember"><input type="radio" name="shut100" (change)="changeShut()" [formControl]="shut" [value]="100"
-        [checked]="shut.value===100" />非公開　</label>
-    <label *ngIf="plan.value"><input type="radio" name="shut1" [formControl]="shut" [value]="1" [checked]="shut.value===1" />募集停止</label>
+    <label *ngIf="!hasmember"><input type="radio" name="shut100" (change)="changeShut()" [formControl]="shut"
+        [value]="100" [checked]="shut.value===100" />非公開　</label>
+    <label *ngIf="plan.value"><input type="radio" name="shut1" [formControl]="shut" [value]="1"
+        [checked]="shut.value===1" />募集停止</label>
+  </div>
+  <div style="display:flex;">
+    <label>ロゴ　</label>
+    <ion-img [src]="logoURL"></ion-img>
+    <input id="upimg" type="file" accept="image/*" capture="camera" (change)="upload($event)" />
   </div>
   <ng-container *ngIf="plan.value">
     <label>月額<input type="number" min="50" max="99999" name="amount" step="100" [formControl]="amount" />円</label>
@@ -39,3 +47,4 @@
     </div>
   </ng-container>
 </form>
+<canvas id="canvas" style='display:none;'></canvas>

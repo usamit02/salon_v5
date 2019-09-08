@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -8,6 +9,7 @@ import { ApiService } from '../../service/api.service';
 import { Observable, Subscription } from 'rxjs';
 import { UiService } from '../../service/ui.service';
 import { Socket } from 'ngx-socket-io';
+import { LoginComponent } from '../login/login.component';
 declare var tinymce;
 @Component({
   selector: 'app-home',
@@ -30,7 +32,7 @@ export class HomeComponent implements OnInit {
   constructor(
     public data: DataService, private afAuth: AngularFireAuth, private db: AngularFirestore,
     private api: ApiService, private storage: AngularFireStorage,
-    private ui: UiService, private socket: Socket,
+    private ui: UiService, private socket: Socket, private pop: PopoverController,
   ) { }
   ngOnInit() {
     this.mentionSb = this.data.mentionSubject.asObservable().subscribe((member: any) => {
@@ -85,9 +87,29 @@ export class HomeComponent implements OnInit {
     var upd = new Date();
     if (this.media.img && this.media.img.type.match(/image.*/)) {
       this.ui.pop("アップロードしています・・・");
+      if (!HTMLCanvasElement.prototype.toBlob) {//edge対策
+        Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+          value: function (callback, type, quality) {
+            let canvas = this;
+            setTimeout(function () {
+              var binStr = atob(canvas.toDataURL(type, quality).split(',')[1]),
+                len = binStr.length,
+                arr = new Uint8Array(len);
+              for (let i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i);
+              }
+              callback(new Blob([arr], { type: type || 'image/jpeg' }));
+            });
+          }
+        });
+      }
       var that = this;
-      const canvas = document.querySelector('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = new Array(1);
+      const ctx = new Array(1);
+      canvas[0] = document.getElementById('canvas0');
+      ctx[0] = canvas[0].getContext('2d');
+      canvas[1] = document.getElementById('canvas1');
+      ctx[1] = canvas[1].getContext('2d');
       var fileName = Math.floor(upd.getTime() / 1000) + ".jpg";
       let img = new Image();
       let reader = new FileReader();
@@ -103,13 +125,13 @@ export class HomeComponent implements OnInit {
               h = img.height > px * 0.75 ? px * 0.75 : img.height;//縦長
               w = img.width * (h / img.height);
             }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            canvas.width = w; canvas.height = h;
-            ctx.drawImage(img, 0, 0, w, h);
+            ctx[i].clearRect(0, 0, canvas[i].width, canvas[i].height);
+            canvas[i].width = w; canvas[i].height = h;
+            ctx[i].drawImage(img, 0, 0, w, h);
             if (i) {
-              canvas.toBlob(upload, 'image/jpeg');
+              canvas[i].toBlob(upload, 'image/jpeg');
             } else {
-              canvas.toBlob(uploadThumb, 'image/jpeg');
+              canvas[i].toBlob(uploadThumb, 'image/jpeg');
             }
           }
         }
@@ -305,6 +327,8 @@ export class HomeComponent implements OnInit {
         provider = new firebase.auth.FacebookAuthProvider();
       } else if (button === "google") {
         provider = new firebase.auth.GoogleAuthProvider();
+      } else if (button === "email") {
+        provider = new firebase.auth.EmailAuthProvider();
       } else if (button === "yahoo") {
         // provider = new auth.OAuthProvider("yahoo.co.jp");
       }
@@ -313,6 +337,15 @@ export class HomeComponent implements OnInit {
         this.ui.pop(button + "のログインに失敗しました。");
       });
     }
+  }
+  async popLogin(event: any) {
+    const popover = await this.pop.create({
+      component: LoginComponent,
+      componentProps: {},
+      event: event,
+      translucent: true
+    });
+    return await popover.present();
   }
   bookmark() {
     if (this.data.user.id) {

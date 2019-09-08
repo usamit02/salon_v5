@@ -33,7 +33,8 @@
     <ng-container *ngFor="let member of user.members">
       <ion-item *ngIf="member.auth || data.room.auth>=200 || user.id===data.user.id" (press)="joinRoom(member.rid)">
         <ion-item button="true" (click)="joinRoom(member.rid)">{{member.room}}</ion-item>
-        <ion-button *ngIf="!member.auth && data.room.auth>=200" color="success" (click)="judge(member)" slot="end">審査</ion-button>
+        <ion-button *ngIf="!member.auth && data.room.auth>=200" color="success" (click)="judge(member)" slot="end">審査
+        </ion-button>
         <ion-label slot="end">{{member.class}} {{member.upd|chatdate:'detail'}}から参加</ion-label>
       </ion-item>
     </ng-container>

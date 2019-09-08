@@ -6,16 +6,18 @@ export class ChatdatePipe implements PipeTransform {
   constructor() { }
   transform(date: Date, type: string = "chat"): string {
     date = new Date(date);
+    let todate = new Date();
+    let nextdate = new Date();
     const diff = new Date().getTime() - date.getTime();
     switch (type) {
       case 'chat':
-        if (diff < 600000) {//10分以内
+        if (diff < 60000) {//1分以内
+          return "今";
+        } else if (diff < 600000) {//10分以内
           return Math.floor(diff / 60000) + "分前";
         }
         const h = date.getHours();
         const m = date.getMinutes();
-        let todate = new Date();
-        let nextdate = new Date();
         todate.setHours(0, 0, 0, 0);//今日の0時  
         nextdate.setDate(todate.getDate() - 1);
         if (date > nextdate) {
@@ -27,8 +29,6 @@ export class ChatdatePipe implements PipeTransform {
         }
         return (date.getMonth() + 1) + "月" + date.getDate() + "日 " + h + "時" + m + "分";
       case 'detail':
-        todate = new Date();
-        nextdate = new Date();
         if (diff > 0) {
           todate.setHours(0, 0, 0, 0);//今日の0時  
           nextdate.setDate(todate.getDate() - 1);

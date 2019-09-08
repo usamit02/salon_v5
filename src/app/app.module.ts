@@ -29,6 +29,7 @@ import { CardComponent } from './salon/card/card.component';
 import { StoryComponent } from './salon/story/story.component';
 import { WebrtcComponent } from './salon/webrtc/webrtc.component';
 import { NotifyComponent } from './salon/notify/notify.component';
+import { LoginComponent } from './salon/login/login.component';
 
 import { OwnerComponent } from './owner/owner.component';
 import { MainComponent } from './owner/main/main.component';
@@ -47,10 +48,10 @@ import 'hammerjs';
 @NgModule({
   declarations: [
     AppComponent, SafePipe, ChatdatePipe, MediaPipe,
-    SalonComponent, HomeComponent, RoomComponent, MemberComponent, CardComponent, DetailComponent, StoryComponent, WebrtcComponent, NotifyComponent,
+    SalonComponent, HomeComponent, RoomComponent, MemberComponent, CardComponent, DetailComponent, StoryComponent, WebrtcComponent, NotifyComponent, LoginComponent,
     OwnerComponent, MainComponent, RoomsComponent, MembersComponent, StorysComponent, NoticeComponent, BookComponent,
   ],
-  entryComponents: [MemberComponent],
+  entryComponents: [MemberComponent, LoginComponent],
   imports: [BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,

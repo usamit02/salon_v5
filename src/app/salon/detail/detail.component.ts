@@ -127,10 +127,12 @@ export class DetailComponent implements OnInit {
   }
 }
 class Member extends User {
-  staffs: any[];
-  members: any[];
-  links: any[];
-  msg: string;
+  staffs: any[] = [];
+  members: any[] = [];
+  links: any[] = [];
+  msg: string = "";
+  upd: Date = new Date(0);
+  rev: Date = new Date(0);
 }
 /*
  if (res.user) {

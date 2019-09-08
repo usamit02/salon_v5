@@ -17,7 +17,7 @@ export class StoryComponent implements OnInit {
   payjp;
   years = ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029"];
   months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
-  card = { last4: "", bland: "", exp_year: null, exp_month: null, change: false };
+  card = { last4: "", brand: "", exp_year: null, exp_month: null, change: false };
   newcard = { number: "4242424242424242", cvc: "123", exp_year: "2020", exp_month: "12" };
   plan = { amount: null, billing_day: null, trial_days: null, auth_days: null, prorate: null };
   price;

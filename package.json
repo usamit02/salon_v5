@@ -13,6 +13,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-optimizer": "^0.803.2",
     "@angular/animations": "^8.2.4",
     "@angular/cdk": "^8.1.4",
     "@angular/common": "~8.1.2",
@@ -32,6 +33,7 @@
     "core-js": "^2.5.4",
     "firebase": "^6.5.0",
     "hammerjs": "^2.0.8",
+    "jquery": "^3.4.1",
     "ngx-socket-io": "^3.0.1",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",

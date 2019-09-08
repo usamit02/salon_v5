@@ -370,7 +370,7 @@ export class RoomComponent implements OnInit {
     }
   }
   async chatClick(e, uid, na, idx) {
-    if (e.target.className.indexOf('avatarItem') === -1) {//アバター上なら何もしない
+    if (e.target.className.indexOf('avatarItem') === -1 && e.target.localName !== 'ion-img') {//アバター上なら何もしない
       if (e.target.className.indexOf('react') !== -1) {//リアクション上なら名前の表示/非表示
         let item = e.target.children[0];
         if (item.style.display === 'none') {

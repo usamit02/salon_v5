@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ApiService } from '../../service/api.service';
 import { Room } from '../owner.component';
+import { APIURL } from '../../../environments/environment';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -57,6 +58,7 @@ export class MainComponent implements OnInit {
     auth_days: this.auth_days,
     prorate: this.prorate
   });
+  logoURL: string;
   constructor(private builder: FormBuilder, private api: ApiService) { }
   ngOnInit() {
     this.roomForm.valueChanges.subscribe((formData) => {
@@ -149,6 +151,56 @@ export class MainComponent implements OnInit {
     let prorate = _room.prorate ? true : false;
     this.prorate.reset(prorate);
     this._room = _room;
+    this.logoURL = APIURL + "img/logo/" + _room.id + '.jpg?' + new Date().getTime();
   }
-
+  upload(e) {
+    const file = e.target.files[0];
+    const rid = this.room.id.toString();
+    const that = this;
+    if (file.type.match(/image.*/)) {
+      if (!HTMLCanvasElement.prototype.toBlob) {//edge対策
+        Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+          value: function (callback, type, quality) {
+            let canvas = this;
+            setTimeout(function () {
+              var binStr = atob(canvas.toDataURL(type, quality).split(',')[1]),
+                len = binStr.length,
+                arr = new Uint8Array(len);
+              for (let i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i);
+              }
+              callback(new Blob([arr], { type: type || 'image/jpeg' }));
+            });
+          }
+        });
+      }
+      var canvas = document.querySelector('canvas');
+      var ctx = canvas.getContext('2d');
+      var img = new Image();
+      var reader = new FileReader();
+      reader.onload = () => {
+        img.onload = () => {
+          let w, h;
+          h = img.height > 50 ? 50 : img.height;//縦長
+          w = img.width * (h / img.height);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.width = w; canvas.height = h;
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob(send, 'image/jpeg');
+        }
+        img.src = <string>reader.result;
+      }
+      reader.readAsDataURL(file);
+    } else {
+      alert("イメージファイルを選択してください。");
+    }
+    function send(file) {
+      that.api.upload("owner/upload", { rid: rid, typ: 'logo', file: file }).subscribe((res: any) => {
+        that.logoURL = APIURL + "img/logo/" + that.room.id + '.jpg?' + new Date().getTime();
+        if (res.body && res.body.err) {
+          alert(res.body.err);
+        }
+      });
+    }
+  }
 }

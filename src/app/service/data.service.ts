@@ -128,6 +128,7 @@ export class Room {
   chat?: boolean = true;
   story?: boolean = false;
   plan?: number = 0;
+  applyplan?: number = 0;
   bookmark?: boolean = false;
   csd?: string;
   upd?: string;

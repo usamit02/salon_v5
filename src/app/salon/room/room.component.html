@@ -1,6 +1,7 @@
 <app-story *ngIf="room.story" [room]="room"></app-story>
 <app-card *ngIf="room.folder" [rooms]="data.rooms"></app-card>
-<div id="mentionTop" class="msg"><span *ngIf="mentionTop" (click)="noticeClick('mentionTop')" class="mention">メンション↑{{mentionTop}}件</span></div>
+<div id="mentionTop" class="msg"><span *ngIf="mentionTop" (click)="noticeClick('mentionTop')"
+    class="mention">メンション↑{{mentionTop}}件</span></div>
 <ion-content *ngIf="data.room.chat" id="chatscontent" #chatscontent (ionScrollEnd)="onScrollEnd()">
   <ion-infinite-scroll #top position="top" threshold="10px" (ionInfinite)="chatLoad($event,'top')">
     <ion-infinite-scroll-content loadingSpinner="bubbles">
@@ -8,8 +9,8 @@
   </ion-infinite-scroll>
   <p id="topmsg" *ngIf="topMsg">{{topMsg}}</p>
   <ion-list>
-    <ion-item class="chat" #chatItems *ngFor="let chat of chats;index as i" (click)="chatClick($event,chat.uid,chat.na,i)"
-      [class.readed]="chat.readed">
+    <ion-item class="chat" #chatItems *ngFor="let chat of chats;index as i" [class.readed]="chat.readed"
+      (click)="chatClick($event,chat.uid,chat.na,i)">
       <ion-item class="avatarItem" lines="none" button="true" (click)="popMember($event,chat.uid)">
         <ion-avatar class="avatar">
           <ion-img [src]="chat.avatar"></ion-img>

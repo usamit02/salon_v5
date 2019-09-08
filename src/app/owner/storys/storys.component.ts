@@ -291,6 +291,22 @@ export class StorysComponent implements OnInit {
     var medias = this.medias;
     const fileName = files[0].name;
     if (files[0].type.match(/image.*/)) {
+      if (!HTMLCanvasElement.prototype.toBlob) {//edge対策
+        Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+          value: function (callback, type, quality) {
+            let canvas = this;
+            setTimeout(function () {
+              var binStr = atob(canvas.toDataURL(type, quality).split(',')[1]),
+                len = binStr.length,
+                arr = new Uint8Array(len);
+              for (let i = 0; i < len; i++) {
+                arr[i] = binStr.charCodeAt(i);
+              }
+              callback(new Blob([arr], { type: type || 'image/jpeg' }));
+            });
+          }
+        });
+      }
       var canvas = document.querySelector('canvas');
       var ctx = canvas.getContext('2d');
       var img = new Image();

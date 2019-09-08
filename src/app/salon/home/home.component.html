@@ -64,6 +64,9 @@
       <ion-fab-button color="facebook" (click)="fab('facebook')">
         <ion-icon name="logo-facebook"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button color="primary" (click)="popLogin($event)">
+        <ion-icon name="mail"></ion-icon>
+      </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>
@@ -75,14 +78,15 @@
         <ion-progress-bar [value]="percent/100"></ion-progress-bar>{{percent|number:'1.0-0'}}%
       </ng-container>
       <ng-template #sendbox>
-        <ion-button [color]="addcolor" (click)="mediaButton.add=!mediaButton.add" (press)="mediaCancel()">
+        <ion-button [color]="addcolor" (click)="mediaButton.add=!mediaButton.add">
           <ion-icon name="add-circle"></ion-icon>
         </ion-button>
         <ion-buttons *ngIf="mediaButton.add">
           <ion-button clear icon-only (click)="mediaButton.img=!mediaButton.img">
             <ion-icon color="success" name="image"></ion-icon>
           </ion-button>
-          <input *ngIf="mediaButton.img" id="upimg" type="file" accept="image/*" capture="camera" (change)="fileup($event)" />
+          <input *ngIf="mediaButton.img" id="upimg" type="file" accept="image/*" capture="camera"
+            (change)="fileup($event)" />
           <ion-button clear icon-only (click)="mediaButton.url=!mediaButton.url" (press)="twitterPress()">
             <ion-icon color="twitter" name="logo-twitter"></ion-icon>
           </ion-button>
@@ -100,7 +104,7 @@
       </ng-template>
     </ion-item>
   </ion-toolbar>
-  <canvas style='display:none;'></canvas>
+  <canvas id="canvas0" style='display:none;'></canvas> <canvas id="canvas1" style='display:none;'></canvas>
 </ion-footer>
 <!--
     <div [class.none]="!data.user.id||!data.room.chat">
